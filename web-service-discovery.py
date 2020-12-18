@@ -5,6 +5,8 @@ web_service_list_file = '/etc/zabbix/webservice-list.txt'
 web_services = []
 
 for line in open(web_service_list_file, 'r').read().split('\n'):
+    if line == '':
+        continue
     if line[0] != '#':
         tmp = line.split(';')
         web_service_url = tmp[0].strip()
