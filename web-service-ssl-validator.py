@@ -12,7 +12,6 @@ web_service_need_check = sys.argv[3]
 ssl_date_fmt = r'%b %d %H:%M:%S %Y %Z'
 
 def ssl_expires_in(hostname):
-    """Gets the SSL cert from a given hostname and checks if it expires within buffer_days"""
     context = ssl.create_default_context()
     conn = context.wrap_socket(
         socket.socket(socket.AF_INET),
@@ -29,7 +28,11 @@ def ssl_expires_in(hostname):
 if str(web_service_need_check) == '1':
     hostname = web_service_url.split('://')[1].split(':')[0]
     if operation == 'is_valid':
-        print (1)
+        try:
+            r = requests.get(web_service_url, allow_redirects=False)
+            print (1)
+        except:
+            print (0)
         sys.exit()
     if operation == 'days_left':
         try:
