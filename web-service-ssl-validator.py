@@ -26,7 +26,7 @@ def ssl_expires_in(hostname):
     return expires
 
 if str(web_service_need_check) == '1':
-    hostname = web_service_url.split('://')[1].split(':')[0]
+    hostname = web_service_url.split('://')[1].split('/')[0].split(':')[0]
     if operation == 'is_valid':
         try:
             r = requests.get(web_service_url, allow_redirects=False)
