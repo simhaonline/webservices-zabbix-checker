@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2020-12-22T03:19:29Z</date>
+    <groups>
+        <group>
+            <name>Project BDS.SU</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template Web Service Checker</template>
+            <name>Template Web Service Checker</name>
+            <groups>
+                <group>
+                    <name>Project BDS.SU</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>Web Service Checker</name>
+                </application>
+            </applications>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>web_service.discovery[]</name>
+                    <key>web_service.discovery[]</key>
+                    <delay>1h</delay>
+                    <lifetime>1d</lifetime>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>Check web service answer code for {#WEB_SERVICE_URL}</name>
+                            <key>web_service.is_answer_valid[{#WEB_SERVICE_URL},{#NORMAL_CODE},{#BASE_LOGIN},{#BASE_PASSWORD}]</key>
+                            <delay>5m</delay>
+                            <applications>
+                                <application>
+                                    <name>Web Service Checker</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last(1)}&lt;&gt;1</expression>
+                                    <name>WEB Status code for {#WEB_SERVICE_URL} is not {#NORMAL_CODE}</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Check web service ssl valid for {#WEB_SERVICE_URL}</name>
+                            <key>web_service.is_ssl_valid[{#WEB_SERVICE_URL},{#SSL_CHECK}]</key>
+                            <delay>60m</delay>
+                            <applications>
+                                <application>
+                                    <name>Web Service Checker</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last(1)}&lt;&gt;1</expression>
+                                    <name>SSL cert for {#WEB_SERVICE_URL} is INVALID</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                        <item_prototype>
+                            <name>Check web service ssl days left for {#WEB_SERVICE_URL}</name>
+                            <key>web_service.ssl_days_left[{#WEB_SERVICE_URL},{#SSL_CHECK}]</key>
+                            <delay>120m</delay>
+                            <applications>
+                                <application>
+                                    <name>Web Service Checker</name>
+                                </application>
+                            </applications>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{last()}&lt;({$MIN_SSL_VALID_DAYS}*{#SSL_CHECK})</expression>
+                                    <name>SSL cert for {#WEB_SERVICE_URL} will be active less than {$MIN_SSL_VALID_DAYS} days</name>
+                                    <priority>HIGH</priority>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+            <macros>
+                <macro>
+                    <macro>{$MIN_SSL_VALID_DAYS}</macro>
+                    <value>14</value>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+</zabbix_export>
